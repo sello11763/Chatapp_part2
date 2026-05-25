@@ -85,4 +85,38 @@ class Registration {
 }
 class Login {
     
+     //I store the registered user so i can compare credentials at login
+    Registration registeredUser;
+    String enteredUsername;
+    String enteredPassword;
+
+    //Constructor takes the registered user and the login attempt details
+    public Login(Registration registeredUser, String enteredUsername, String enteredPassword) {
+        this.registeredUser = registeredUser;
+        this.enteredUsername = enteredUsername;
+        this.enteredPassword = enteredPassword;
+    }
+
+    //Checking if the entered username and password match what was registered
+    public boolean loginUser() {
+        boolean usernameMatch = enteredUsername.equals(registeredUser.username);
+        boolean passwordMatch = enteredPassword.equals(registeredUser.password);
+
+        if (usernameMatch == true && passwordMatch == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //Returning a welcome message on success or an error message on failure
+    public String returnLoginStatus() {
+        if (loginUser() == true) {
+            return "Welcome " + registeredUser.firstName + ", "
+                 + registeredUser.lastName + " it is great to see you again.";
+        } else {
+            return "Username or password incorrect, please try again.";
+        }
+    }
+    
 }
