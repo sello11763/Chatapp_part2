@@ -73,4 +73,94 @@ public class Chatapp_part2 {
             return;
         }
     }
-}
+    
+      //MESSAGE
+        System.out.println("\nWelcome to QuickChat.");
+
+        //Asking how many messages the user wants to send
+        System.out.print("\nHow many messages would you like to send? ");
+        int maxMessages = Integer.parseInt(scanner.nextLine());
+
+        //Keeps showing the menu until the user chooses Quit
+        boolean running = true;
+
+        while (running == true) {
+
+            System.out.println("\n============================================");
+            System.out.println("1) Send Messages");
+            System.out.println("2) Show recently sent messages");
+            System.out.println("3) Quit");
+            System.out.print("Choose an option: ");
+            int menuChoice = Integer.parseInt(scanner.nextLine());
+
+            if (menuChoice == 1) {
+
+                //Checking if the user has used up all their messages
+                if (Message.totalMessagesSent >= maxMessages) {
+                    System.out.println("You have reached your message limit of " + maxMessages + ".");
+
+                } else {
+
+                    //Collecting the message details from the user
+                    System.out.print("Enter recipient cell number (e.g. +27718693002): ");
+                    String recipientNumber = scanner.nextLine();
+
+                    System.out.print("Enter your message: ");
+                    String messageText = scanner.nextLine();
+
+                    //Creating a new Message object
+                    Message msg = new Message(recipientNumber, messageText);
+
+                    //Checking the recipient number
+                    String cellCheck = msg.checkRecipientCell();
+                    System.out.println(cellCheck);
+
+                    //Checking the message length
+                    String lengthCheck = msg.checkMessageLength();
+                    System.out.println(lengthCheck);
+
+                   
+                    if (cellCheck.equals("Cell phone number successfully captured.")
+                            && lengthCheck.equals("Message ready to send.")) {
+
+                        //Showing the full message details
+                        System.out.println("\n--- Message Details ---");
+                        System.out.println("Message ID: "   + msg.messageID);
+                        System.out.println("Message Hash: " + msg.messageHash);
+                        System.out.println("Recipient: "    + msg.recipient);
+                        System.out.println("Message: "      + msg.messageText);
+
+                        // Ask what to do with the message
+                        System.out.println("\nWhat would you like to do?");
+                        System.out.println("1) Send Message");
+                        System.out.println("2) Disregard Message");
+                        System.out.println("3) Store Message to send later");
+                        System.out.print("Choose an option: ");
+                        int sendChoice = Integer.parseInt(scanner.nextLine());
+
+                       
+                        System.out.println(msg.SentMessage(sendChoice));
+                    }
+                }
+
+            } else if (menuChoice == 2) {
+               
+                Message.printAllSentMessages();
+
+            } else if (menuChoice == 3) {
+                
+                running = false;
+                System.out.println("\nTotal messages sent: " + Message.totalMessagesSent);
+                System.out.println("Goodbye!");
+
+            } else {
+                System.out.println("Invalid option. Please choose 1, 2, or 3.");
+            }
+        
+        
+        }
+        
+
+        scanner.close();
+        
+  }
