@@ -13,7 +13,9 @@ import java.util.Scanner;
 public class Chatapp_part2 {
 
     public static void main(String[] args) {
-         Scanner scanner = new Scanner(System.in);
+        
+   //Creating a scanner
+   Scanner scanner = new Scanner(System.in);
         
         //REGISTRATION
           System.out.println("============================================");
@@ -72,9 +74,8 @@ public class Chatapp_part2 {
             scanner.close();
             return;
         }
-    }
-    
-      //MESSAGE
+        
+        //MESSAGE
         System.out.println("\nWelcome to QuickChat.");
 
         //Asking how many messages the user wants to send
@@ -156,11 +157,9 @@ public class Chatapp_part2 {
             } else {
                 System.out.println("Invalid option. Please choose 1, 2, or 3.");
             }
-        
-        
         }
-        
 
         scanner.close();
         
   }
+}
