@@ -112,6 +112,52 @@ class Message {
         }
     }
     
-    
+     //Returning all the details of this single message as one string
+    public String printMessages() {
+        return "Message ID: "   + messageID   + "\n"
+             + "Message Hash: " + messageHash + "\n"
+             + "Recipient: "    + recipient   + "\n"
+             + "Message: "      + messageText;
+    }
+
+    // Returning the total number of messages sent so far
+    public int returnTotalMessagess() {
+        return totalMessagesSent;
+    }
+
+    //Looping through the sentMessages array and prints each one
+    public static void printAllSentMessages() {
+        if (totalMessagesSent == 0) {
+            System.out.println("No messages have been sent yet.");
+        } else {
+            System.out.println("\n--- All Sent Messages ---");
+
+            for (int i = 0; i < totalMessagesSent; i++) {
+                System.out.println("\nMessage " + (i + 1) + ":");
+                System.out.println(sentMessages[i]);
+                System.out.println("-------------------------");
+            }
+        }
+    }
+
+    // Saves the message to a JSON file so it can be sent later
+    // Research FileWriter is used to write text to a file
+    public void storeMessage() {
+        try {
+            String json = "{"
+                + "\"messageID\": \""   + messageID   + "\", "
+                + "\"messageHash\": \"" + messageHash + "\", "
+                + "\"recipient\": \""   + recipient   + "\", "
+                + "\"message\": \""     + messageText + "\""
+                + "}";
+
+            java.io.FileWriter writer = new java.io.FileWriter("stored_messages.json", true);
+            writer.write(json + "\n");
+            writer.close();
+
+        } catch (Exception e) {
+            System.out.println("Error storing message: " + e.getMessage());
+        }
+    }
     
 }
