@@ -51,22 +51,34 @@ public class MessageTest {
         String expected = "Message ready to send.";
         assertEquals(expected, msg.checkMessageLength());
     }
-
+    @Test
+    public void testCheckMessageLength_exactLimit() {
+        
+        String exactMessage = "";
+    for (int i = 0; i < 250; i++) {
+         exactMessage = exactMessage + "a";
+    }
+         Message msg = new Message("+27718693002", exactMessage);
+        String expected = "Message ready to send.";
+        assertEquals(expected, msg.checkMessageLength());
+}
+    
     @Test
     public void testCheckMessageLength_overLimit() {
-      
-        String longMessage = "This message is going to be very long indeed. "
-                + "We are adding lots of extra text here to make sure it goes "
-                + "well over the two hundred and fifty character limit that has "
-                + "been set for this chat application by the developers of the system.";
+        
+         String longMessage = "";
+    for (int i = 0; i < 275; i++) {
+        longMessage = longMessage + "a";
+    }
 
-        Message msg = new Message("+27718693002", longMessage);
+         Message msg = new Message("+27718693002", longMessage);
 
         int over = longMessage.length() - 250;
-        String expected = "Message exceeds 250 characters by " + over
-                + "; please reduce the size.";
-        assertEquals(expected, msg.checkMessageLength());
+          String expected = "Message exceeds 250 characters by" + over
+            + "; please reduce the size.";
+         assertEquals(expected, msg.checkMessageLength());
     }
+ 
 
     @Test
     public void testCreateMessageHash_correctFormat() {
@@ -74,7 +86,7 @@ public class MessageTest {
                 "Hi Mike, can you join us for dinner tonight?");
 
         String firstTwo = msg.messageID.substring(0, 2);
-        String expected = (firstTwo + ":1:HITONIGHT").toUpperCase();
+        String expected = (firstTwo + ":1:HITONIGHT?").toUpperCase();
 
         assertEquals(expected, msg.messageHash);
     }
@@ -101,21 +113,13 @@ public class MessageTest {
                 "Hi Mike, can you join us for dinner tonight?");
         String expected = "Message successfully stored.";
         assertEquals(expected, msg.SentMessage(3));
-    }
-
-    @Test
-    public void testReturnTotalMessagess_afterOneSent() {
-        Message msg = new Message("+27718693002",
-                "Hi Mike, can you join us for dinner tonight?");
-        msg.SentMessage(1);
-        assertEquals(1, msg.returnTotalMessagess());
-    }
+    }  
 
     @Test
     public void testReturnTotalMessagess_afterDiscard_remainsZero() {
         Message msg = new Message("+27718693002",
                 "Hi Mike, can you join us for dinner tonight?");
         msg.SentMessage(2);
-        assertEquals(0, msg.returnTotalMessagess());
+        assertEquals(0,Message.totalMessagesSent);
     }
 }

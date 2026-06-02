@@ -87,7 +87,7 @@ class Message {
             return "Message ready to send.";
         } else {
             int over = messageText.length() - 250;
-            return "Message exceeds 250 characters by " + over + "; please reduce the size.";
+            return "Message exceeds 250 characters by" + over + "; please reduce the size.";
         }
     }
 
