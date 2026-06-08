@@ -11,16 +11,17 @@ package assignment.chatapp_part2;
 
 class Registration {
 
-    //Variables to store the users details
+    // These fields must NOT have the private keyword
     String firstName;
     String lastName;
     String username;
     String password;
     String cellPhoneNumber;
 
-    //Constructor that stores the users details when a Registration object is created
     public Registration(String firstName, String lastName, String username,
                         String password, String cellPhoneNumber) {
+        // The this. keyword saves the value into the field
+        // Without this. the value is lost when the constructor finishes
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -28,7 +29,6 @@ class Registration {
         this.cellPhoneNumber = cellPhoneNumber;
     }
 
-    //Checking that the username contains an underscore and is 5 characters or less
     public boolean checkUserName() {
         boolean hasUnderscore = username.contains("_");
         boolean shortEnough = username.length() <= 5;
@@ -40,7 +40,6 @@ class Registration {
         }
     }
 
-    //Checking the password meets all rules using regex
     public boolean checkPasswordComplexity() {
         String regex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$";
 
@@ -51,7 +50,6 @@ class Registration {
         }
     }
 
-    //Checking the cell number starts with +27 followed by exactly 9 digits
     public boolean checkCellPhoneNumber() {
         String regex = "^\\+27[0-9]{9}$";
 
@@ -62,7 +60,6 @@ class Registration {
         }
     }
 
-    //Registering the user checks all three fields and returns the correct message
     public String registerUser() {
         if (checkUserName() == false) {
             return "Username is not correctly formatted; please ensure that your username "
@@ -85,20 +82,27 @@ class Registration {
 }
 class Login {
     
-     //I store the registered user so i can compare credentials at login
     Registration registeredUser;
     String enteredUsername;
     String enteredPassword;
 
-    //Constructor takes the registered user and the login attempt details
     public Login(Registration registeredUser, String enteredUsername, String enteredPassword) {
-        this.registeredUser = registeredUser;
+        if (registeredUser == null) {
+            System.out.println("Username or password incorrect, please try again.");
+        } else {
+            this.registeredUser = registeredUser;
+        }
+
         this.enteredUsername = enteredUsername;
         this.enteredPassword = enteredPassword;
     }
 
-    //Checking if the entered username and password match what was registered
     public boolean loginUser() {
+        if (registeredUser == null) {
+            System.out.println("Username or password incorrect, please try again.");
+            return false;
+        }
+
         boolean usernameMatch = enteredUsername.equals(registeredUser.username);
         boolean passwordMatch = enteredPassword.equals(registeredUser.password);
 
@@ -109,8 +113,11 @@ class Login {
         }
     }
 
-    //Returning a welcome message on success or an error message on failure
     public String returnLoginStatus() {
+        if (registeredUser == null) {
+            return "Username or password incorrect, please try again.";
+        }
+
         if (loginUser() == true) {
             return "Welcome " + registeredUser.firstName + ", "
                  + registeredUser.lastName + " it is great to see you again.";
@@ -118,5 +125,4 @@ class Login {
             return "Username or password incorrect, please try again.";
         }
     }
-    
 }
