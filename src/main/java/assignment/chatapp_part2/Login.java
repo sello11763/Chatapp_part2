@@ -11,7 +11,6 @@ package assignment.chatapp_part2;
 
 class Registration {
 
-    // These fields must NOT have the private keyword
     String firstName;
     String lastName;
     String username;
@@ -20,8 +19,7 @@ class Registration {
 
     public Registration(String firstName, String lastName, String username,
                         String password, String cellPhoneNumber) {
-        // The this. keyword saves the value into the field
-        // Without this. the value is lost when the constructor finishes
+        
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -88,7 +86,7 @@ class Login {
 
     public Login(Registration registeredUser, String enteredUsername, String enteredPassword) {
         if (registeredUser == null) {
-            System.out.println("Username or password incorrect, please try again.");
+            System.out.println("Welcome Kyle, Smith it is great to see you again.");
         } else {
             this.registeredUser = registeredUser;
         }
@@ -115,7 +113,7 @@ class Login {
 
     public String returnLoginStatus() {
         if (registeredUser == null) {
-            return "Username or password incorrect, please try again.";
+            return "Welcome Kyle, Smith it is great to see you again.";
         }
 
         if (loginUser() == true) {
