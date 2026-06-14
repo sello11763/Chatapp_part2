@@ -76,13 +76,11 @@ public class Chatapp_part2 {
         }
         
         //MESSAGE
-        System.out.println("\nWelcome to QuickChat.");
+         System.out.println("\nWelcome to QuickChat.");
 
-        //Asking how many messages the user wants to send
         System.out.print("\nHow many messages would you like to send? ");
         int maxMessages = Integer.parseInt(scanner.nextLine());
 
-        //Keeps showing the menu until the user chooses Quit
         boolean running = true;
 
         while (running == true) {
@@ -91,47 +89,39 @@ public class Chatapp_part2 {
             System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
+            System.out.println("4) Stored Messages");
             System.out.print("Choose an option: ");
             int menuChoice = Integer.parseInt(scanner.nextLine());
 
             if (menuChoice == 1) {
 
-                //Checking if the user has used up all their messages
                 if (Message.totalMessagesSent >= maxMessages) {
-                    System.out.println("You have reached your message limit of " + maxMessages + ".");
-
+                    System.out.println("You have reached your message limit of "
+                            + maxMessages + ".");
                 } else {
 
-                    //Collecting the message details from the user
                     System.out.print("Enter recipient cell number (e.g. +27718693002): ");
                     String recipientNumber = scanner.nextLine();
 
                     System.out.print("Enter your message: ");
                     String messageText = scanner.nextLine();
 
-                    //Creating a new Message object
                     Message msg = new Message(recipientNumber, messageText);
 
-                    //Checking the recipient number
-                    String cellCheck = msg.checkRecipientCell();
-                    System.out.println(cellCheck);
-
-                    //Checking the message length
+                    String cellCheck   = msg.checkRecipientCell();
                     String lengthCheck = msg.checkMessageLength();
+                    System.out.println(cellCheck);
                     System.out.println(lengthCheck);
 
-                   
                     if (cellCheck.equals("Cell phone number successfully captured.")
                             && lengthCheck.equals("Message ready to send.")) {
 
-                        //Showing the full message details
                         System.out.println("\n--- Message Details ---");
                         System.out.println("Message ID: "   + msg.messageID);
                         System.out.println("Message Hash: " + msg.messageHash);
                         System.out.println("Recipient: "    + msg.recipient);
                         System.out.println("Message: "      + msg.messageText);
 
-                        // Ask what to do with the message
                         System.out.println("\nWhat would you like to do?");
                         System.out.println("1) Send Message");
                         System.out.println("2) Disregard Message");
@@ -139,27 +129,67 @@ public class Chatapp_part2 {
                         System.out.print("Choose an option: ");
                         int sendChoice = Integer.parseInt(scanner.nextLine());
 
-                       
                         System.out.println(msg.SentMessage(sendChoice));
                     }
                 }
 
             } else if (menuChoice == 2) {
-               
                 Message.printAllSentMessages();
 
             } else if (menuChoice == 3) {
-                
                 running = false;
                 System.out.println("\nTotal messages sent: " + Message.totalMessagesSent);
                 System.out.println("Goodbye!");
 
+            } else if (menuChoice == 4) {
+
+                // Load stored messages from JSON file first
+                Message.loadStoredMessages();
+
+                System.out.println("\n============================================");
+                System.out.println("a) Display sender and recipient of stored messages");
+                System.out.println("b) Display the longest stored message");
+                System.out.println("c) Search for a message by ID");
+                System.out.println("d) Search messages by recipient");
+                System.out.println("e) Delete a message using message hash");
+                System.out.println("f) Display full report of stored messages");
+                System.out.print("Choose an option: ");
+                String storedChoice = scanner.nextLine();
+
+                if (storedChoice.equals("a")) {
+                    Message.displayStoredSenderAndRecipient(reg.username);
+
+                } else if (storedChoice.equals("b")) {
+                    System.out.println("\nLongest stored message:");
+                    System.out.println(Message.getLongestStoredMessage());
+
+                } else if (storedChoice.equals("c")) {
+                    System.out.print("Enter message ID to search: ");
+                    String searchID = scanner.nextLine();
+                    System.out.println(Message.searchByMessageID(searchID));
+
+                } else if (storedChoice.equals("d")) {
+                    System.out.print("Enter recipient number to search: ");
+                    String searchRecipient = scanner.nextLine();
+                    System.out.println(Message.searchByRecipient(searchRecipient));
+
+                } else if (storedChoice.equals("e")) {
+                    System.out.print("Enter message hash to delete: ");
+                    String hashToDelete = scanner.nextLine();
+                    System.out.println(Message.deleteByMessageHash(hashToDelete));
+
+                } else if (storedChoice.equals("f")) {
+                    Message.displayStoredMessagesReport();
+
+                } else {
+                    System.out.println("Invalid option.");
+                }
+
             } else {
-                System.out.println("Invalid option. Please choose 1, 2, or 3.");
+                System.out.println("Invalid option. Please choose 1, 2, 3, or 4.");
             }
         }
 
         scanner.close();
-        
-  }
+    }
 }

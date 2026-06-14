@@ -13,7 +13,7 @@ import java.util.Random;
 class Message {
     
  // Variables to store this message's details
-    String messageID;
+   String messageID;
     String recipient;
     String messageText;
     String messageHash;
@@ -37,7 +37,7 @@ class Message {
     // Array to store all message IDs
     static String[] messageIDs = new String[100];
 
-    // Arrays to store stored messages loaded from JSON
+    // Arrays to store stored messages
     static String[] storedMessageTexts      = new String[100];
     static String[] storedMessageRecipients = new String[100];
     static String[] storedMessageHashes     = new String[100];
@@ -111,13 +111,20 @@ class Message {
     }
 
     // Lets the user choose to send, disregard, or store the message
+    // This method also populates all the correct arrays
     public String SentMessage(int choice) {
         if (choice == 1) {
-            // Store the message text and details in the arrays
+            // Store message text in sentMessages array at current index
             sentMessages[totalMessagesSent]  = messageText;
-            messageHashes[totalMessagesSent + totalDisregarded] = messageHash;
-            messageIDs[totalMessagesSent + totalDisregarded]    = messageID;
-            totalMessagesSent = totalMessagesSent + 1;
+            // Store hash and ID at the same index
+            messageHashes[totalMessagesSent] = messageHash;
+            messageIDs[totalMessagesSent]    = messageID;
+            // Also add to storedMessageTexts so search methods can find it
+            storedMessageTexts[totalStoredMessages]      = messageText;
+            storedMessageRecipients[totalStoredMessages] = recipient;
+            storedMessageHashes[totalStoredMessages]     = messageHash;
+            totalStoredMessages  = totalStoredMessages + 1;
+            totalMessagesSent    = totalMessagesSent + 1;
             return "Message successfully sent.";
 
         } else if (choice == 2) {
@@ -127,7 +134,11 @@ class Message {
             return "Press 0 to delete the message.";
 
         } else if (choice == 3) {
-            // Write the message to the JSON file
+            // Write to JSON file and also populate stored arrays
+            storedMessageTexts[totalStoredMessages]      = messageText;
+            storedMessageRecipients[totalStoredMessages] = recipient;
+            storedMessageHashes[totalStoredMessages]     = messageHash;
+            totalStoredMessages = totalStoredMessages + 1;
             storeMessage();
             totalStored = totalStored + 1;
             return "Message successfully stored.";
@@ -205,8 +216,8 @@ class Message {
             return null;
         }
 
-        start    = start + searchFor.length();
-        int end  = line.indexOf("\"", start);
+        start   = start + searchFor.length();
+        int end = line.indexOf("\"", start);
 
         if (end == -1) {
             return null;
@@ -248,7 +259,7 @@ class Message {
 
     // c. Searches for a message by ID and returns the recipient and message
     public static String searchByMessageID(String searchID) {
-        for (int i = 0; i < totalStoredMessages; i++) {
+        for (int i = 0; i < totalMessagesSent; i++) {
             if (messageIDs[i] != null && messageIDs[i].equals(searchID)) {
                 return "Recipient: " + storedMessageRecipients[i]
                      + "\nMessage: "  + storedMessageTexts[i];
@@ -318,8 +329,6 @@ class Message {
     }
 
     // Saves the message to a JSON file so it can be sent later
-    // Research: FileWriter is used to write text to a file
-    // true passed to FileWriter means we append instead of overwriting
     public void storeMessage() {
         try {
             String json = "{"

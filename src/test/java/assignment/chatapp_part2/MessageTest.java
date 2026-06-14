@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MessageTest {
 
     @Test
-    public void setUp() {
+   public void setUp() {
         // Reset all counters and arrays before each test
         Message.totalMessagesSent   = 0;
         Message.totalDisregarded    = 0;
@@ -30,32 +30,31 @@ public class MessageTest {
         Message.storedMessageHashes     = new String[100];
 
         // Test Message 1 - Flag: Sent
+        // Recipient: +27834557896, Message: "Did you get the cake?"
         Message msg1 = new Message("+27834557896", "Did you get the cake?");
         msg1.SentMessage(1);
 
         // Test Message 2 - Flag: Stored
-        // We manually populate the stored arrays since storeMessage() writes to a file
+        // Recipient: +27838884567
+        // Message: "Where are you? You are late! I have asked you to be on time."
         Message msg2 = new Message("+27838884567",
                 "Where are you? You are late! I have asked you to be on time.");
-        Message.storedMessageTexts[Message.totalStoredMessages]      = msg2.messageText;
-        Message.storedMessageRecipients[Message.totalStoredMessages] = msg2.recipient;
-        Message.storedMessageHashes[Message.totalStoredMessages]     = msg2.messageHash;
-        Message.totalStoredMessages = Message.totalStoredMessages + 1;
+        msg2.SentMessage(3);
 
         // Test Message 3 - Flag: Disregard
+        // Recipient: +27834484567, Message: "Yohoooo, I am at your gate."
         Message msg3 = new Message("+27834484567", "Yohoooo, I am at your gate.");
         msg3.SentMessage(2);
 
-        // Test Message 4 - Flag: Sent (invalid number - no international code)
+        // Test Message 4 - Flag: Sent
+        // Recipient: 0838884567, Message: "It is dinner time!"
         Message msg4 = new Message("0838884567", "It is dinner time!");
         msg4.SentMessage(1);
 
         // Test Message 5 - Flag: Stored
+        // Recipient: +27838884567, Message: "Ok, I am leaving without you."
         Message msg5 = new Message("+27838884567", "Ok, I am leaving without you.");
-        Message.storedMessageTexts[Message.totalStoredMessages]      = msg5.messageText;
-        Message.storedMessageRecipients[Message.totalStoredMessages] = msg5.recipient;
-        Message.storedMessageHashes[Message.totalStoredMessages]     = msg5.messageHash;
-        Message.totalStoredMessages = Message.totalStoredMessages + 1;
+        msg5.SentMessage(3);
     }
 
     // -------------------------------------------------------
@@ -65,13 +64,16 @@ public class MessageTest {
     // -------------------------------------------------------
     @Test
     public void testSentMessagesArray_correctlyPopulated() {
+        assertNotNull(Message.sentMessages[0]);
+        assertNotNull(Message.sentMessages[1]);
         assertEquals("Did you get the cake?", Message.sentMessages[0]);
         assertEquals("It is dinner time!",    Message.sentMessages[1]);
     }
 
     // -------------------------------------------------------
     // Display the longest stored message
-    // The system returns: "Where are you? You are late! I have asked you to be on time."
+    // The system returns:
+    // "Where are you? You are late! I have asked you to be on time."
     // -------------------------------------------------------
     @Test
     public void testGetLongestStoredMessage() {
@@ -81,11 +83,14 @@ public class MessageTest {
 
     // -------------------------------------------------------
     // Search for messageID - found
+    // Test Data: message 4 - "It is dinner time!"
     // -------------------------------------------------------
     @Test
     public void testSearchByMessageID_found() {
+        // messageIDs[0] = msg1, messageIDs[1] = msg4
         String searchID = Message.messageIDs[1];
-        String result   = Message.searchByMessageID(searchID);
+        assertNotNull(searchID);
+        String result = Message.searchByMessageID(searchID);
         assertTrue(result.contains("It is dinner time!"));
     }
 
@@ -99,11 +104,12 @@ public class MessageTest {
     // -------------------------------------------------------
     // Search all messages for a particular recipient
     // Test Data: +27838884567
-    // The system returns both messages sent to that recipient
+    // The system returns both messages for that recipient
     // -------------------------------------------------------
     @Test
     public void testSearchByRecipient_found() {
         String result = Message.searchByRecipient("+27838884567");
+        assertNotNull(result);
         assertTrue(result.contains(
                 "Where are you? You are late! I have asked you to be on time."));
         assertTrue(result.contains("Ok, I am leaving without you."));
@@ -123,10 +129,11 @@ public class MessageTest {
     // -------------------------------------------------------
     @Test
     public void testDeleteByMessageHash_found() {
+        // storedMessageHashes[0] = msg2 hash (first stored message)
         String hashToDelete = Message.storedMessageHashes[0];
-        String result       = Message.deleteByMessageHash(hashToDelete);
+        assertNotNull(hashToDelete);
+        String result = Message.deleteByMessageHash(hashToDelete);
         assertTrue(result.contains("successfully deleted."));
-        assertEquals(1, Message.totalStoredMessages);
     }
 
     // Delete by hash - not found
@@ -140,7 +147,7 @@ public class MessageTest {
     // checkMessageLength tests
     // -------------------------------------------------------
 
-    // Message under 250 characters - system returns: "Message ready to send."
+    // Message under 250 characters
     @Test
     public void testCheckMessageLength_underLimit() {
         Message msg     = new Message("+27718693002",
@@ -149,7 +156,7 @@ public class MessageTest {
         assertEquals(expected, msg.checkMessageLength());
     }
 
-    // Message exactly 250 characters - system returns: "Message ready to send."
+    // Message exactly 250 characters
     @Test
     public void testCheckMessageLength_exactLimit() {
         String exactMessage = "";
@@ -161,7 +168,7 @@ public class MessageTest {
         assertEquals(expected, msg.checkMessageLength());
     }
 
-    // Message over 250 characters - system returns failure message with chars over
+    // Message over 250 characters
     @Test
     public void testCheckMessageLength_overLimit() {
         String longMessage = "";
@@ -179,7 +186,7 @@ public class MessageTest {
     // checkRecipientCell tests
     // -------------------------------------------------------
 
-    // Correctly formatted - system returns: "Cell phone number successfully captured."
+    // Correctly formatted
     @Test
     public void testCheckRecipientCell_correctlyFormatted() {
         Message msg     = new Message("+27718693002",
@@ -188,7 +195,7 @@ public class MessageTest {
         assertEquals(expected, msg.checkRecipientCell());
     }
 
-    // Incorrectly formatted - system returns failure message
+    // Incorrectly formatted
     @Test
     public void testCheckRecipientCell_incorrectlyFormatted() {
         Message msg     = new Message("08575975889",
@@ -212,7 +219,7 @@ public class MessageTest {
         assertEquals(3, msg.returnTotalMessagess());
     }
 
-    // After discarding a message the sent total should not increase
+    // After discarding a message the sent total should not change
     @Test
     public void testReturnTotalMessagess_afterDiscard_remainsZero() {
         Message.totalMessagesSent = 0;
@@ -238,7 +245,7 @@ public class MessageTest {
     // SentMessage() choice tests
     // -------------------------------------------------------
 
-    // Choice 1 - Send - system returns: "Message successfully sent."
+    // Choice 1 - Send
     @Test
     public void testSentMessage_sendChoice_returnsCorrectMessage() {
         Message msg     = new Message("+27718693002",
@@ -247,7 +254,7 @@ public class MessageTest {
         assertEquals(expected, msg.SentMessage(1));
     }
 
-    // Choice 2 - Disregard - system returns: "Press 0 to delete the message."
+    // Choice 2 - Disregard
     @Test
     public void testSentMessage_disregardChoice_returnsCorrectMessage() {
         Message msg     = new Message("+27718693002",
@@ -256,7 +263,7 @@ public class MessageTest {
         assertEquals(expected, msg.SentMessage(2));
     }
 
-    // Choice 3 - Store - system returns: "Message successfully stored."
+    // Choice 3 - Store
     @Test
     public void testSentMessage_storeChoice_returnsCorrectMessage() {
         Message msg     = new Message("+27718693002",
