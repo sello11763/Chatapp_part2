@@ -30,48 +30,35 @@ public class MessageTest {
         Message.storedMessageHashes     = new String[100];
 
         // Test Message 1 - Flag: Sent
-        // Recipient: +27834557896, Message: "Did you get the cake?"
         Message msg1 = new Message("+27834557896", "Did you get the cake?");
         msg1.SentMessage(1);
 
         // Test Message 2 - Flag: Stored
-        // Recipient: +27838884567
-        // Message: "Where are you? You are late! I have asked you to be on time."
         Message msg2 = new Message("+27838884567",
                 "Where are you? You are late! I have asked you to be on time.");
         msg2.SentMessage(3);
 
         // Test Message 3 - Flag: Disregard
-        // Recipient: +27834484567, Message: "Yohoooo, I am at your gate."
         Message msg3 = new Message("+27834484567", "Yohoooo, I am at your gate.");
         msg3.SentMessage(2);
 
         // Test Message 4 - Flag: Sent
-        // Recipient: 0838884567, Message: "It is dinner time!"
         Message msg4 = new Message("0838884567", "It is dinner time!");
         msg4.SentMessage(1);
 
         // Test Message 5 - Flag: Stored
-        // Recipient: +27838884567, Message: "Ok, I am leaving without you."
         Message msg5 = new Message("+27838884567", "Ok, I am leaving without you.");
         msg5.SentMessage(3);
     }
 
-    // -------------------------------------------------------
     // Display the longest stored message
-    // The system returns:
-    // "Where are you? You are late! I have asked you to be on time."
-    // -------------------------------------------------------
     @Test
     public void testGetLongestStoredMessage() {
         String expected = "Where are you? You are late! I have asked you to be on time.";
         assertEquals(expected, Message.getLongestStoredMessage());
     }
-
-    // -------------------------------------------------------
+    
     // Search for messageID - found
-    // Test Data: message 4 - "It is dinner time!"
-    // -------------------------------------------------------
     @Test
     public void testSearchByMessageID_found() {
         // messageIDs[0] = msg1, messageIDs[1] = msg4
@@ -88,11 +75,7 @@ public class MessageTest {
         assertEquals("Message ID not found.", result);
     }
 
-    // -------------------------------------------------------
     // Search all messages for a particular recipient
-    // Test Data: +27838884567
-    // The system returns both messages for that recipient
-    // -------------------------------------------------------
     @Test
     public void testSearchByRecipient_found() {
         String result = Message.searchByRecipient("+27838884567");
@@ -109,11 +92,7 @@ public class MessageTest {
         assertTrue(result.contains("No messages found for recipient"));
     }
 
-    // -------------------------------------------------------
     // Delete a message using message hash
-    // Test Data: Test Message 2
-    // The system returns: message successfully deleted
-    // -------------------------------------------------------
     @Test
     public void testDeleteByMessageHash_found() {
         // storedMessageHashes[0] = msg2 hash (first stored message)
@@ -130,10 +109,7 @@ public class MessageTest {
         assertEquals("Message hash not found.", result);
     }
 
-    // -------------------------------------------------------
     // checkMessageLength tests
-    // -------------------------------------------------------
-
     // Message under 250 characters
     @Test
     public void testCheckMessageLength_underLimit() {
@@ -169,10 +145,7 @@ public class MessageTest {
         assertEquals(expected, msg.checkMessageLength());
     }
 
-    // -------------------------------------------------------
     // checkRecipientCell tests
-    // -------------------------------------------------------
-
     // Correctly formatted
     @Test
     public void testCheckRecipientCell_correctlyFormatted() {
@@ -192,10 +165,7 @@ public class MessageTest {
         assertEquals(expected, msg.checkRecipientCell());
     }
 
-    // -------------------------------------------------------
     // returnTotalMessagess tests
-    // -------------------------------------------------------
-
     // After sending one more message total should increase
     @Test
     public void testReturnTotalMessagess_afterSending() {
@@ -216,10 +186,7 @@ public class MessageTest {
         assertEquals(0, Message.totalMessagesSent);
     }
 
-    // -------------------------------------------------------
     // checkMessageID test
-    // -------------------------------------------------------
-
     // Auto-generated ID should always be 10 digits or less
     @Test
     public void testCheckMessageID_isValid() {
@@ -228,10 +195,7 @@ public class MessageTest {
         assertTrue(msg.checkMessageID());
     }
 
-    // -------------------------------------------------------
     // SentMessage() choice tests
-    // -------------------------------------------------------
-
     // Choice 1 - Send
     @Test
     public void testSentMessage_sendChoice_returnsCorrectMessage() {

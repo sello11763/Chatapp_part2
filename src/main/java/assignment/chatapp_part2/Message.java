@@ -74,7 +74,6 @@ class Message {
     }
 
     // Checks the recipient number is correctly formatted with a +27 international code
-    // Regex reference: standard SA international phone number pattern ^\+27[0-9]{9}$
     public String checkRecipientCell() {
         String regex = "^\\+27[0-9]{9}$";
 
@@ -86,11 +85,7 @@ class Message {
         }
     }
 
-    // Builds the message hash from:
-    // - First two digits of the message ID
-    // - The message number
-    // - The first and last words of the message
-    // Example: 00:1:HITONIGHT?
+    // Building the message hash
     public String createMessageHash() {
         String firstTwoDigits = messageID.substring(0, 2);
         String[] words        = messageText.split(" ");
@@ -174,10 +169,6 @@ class Message {
             }
         }
     }
-
-    // -------------------------------------------------------
-    // Part 3 methods
-    // -------------------------------------------------------
 
     // Loads stored messages from the JSON file into the stored arrays
     public static void loadStoredMessages() {
