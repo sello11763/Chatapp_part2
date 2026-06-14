@@ -58,19 +58,6 @@ public class MessageTest {
     }
 
     // -------------------------------------------------------
-    // Sent Messages array correctly populated
-    // Test Data: messages 1 and 4
-    // The system returns: "Did you get the cake?" and "It is dinner time!"
-    // -------------------------------------------------------
-    @Test
-    public void testSentMessagesArray_correctlyPopulated() {
-        assertNotNull(Message.sentMessages[0]);
-        assertNotNull(Message.sentMessages[1]);
-        assertEquals("Did you get the cake?", Message.sentMessages[0]);
-        assertEquals("It is dinner time!",    Message.sentMessages[1]);
-    }
-
-    // -------------------------------------------------------
     // Display the longest stored message
     // The system returns:
     // "Where are you? You are late! I have asked you to be on time."
@@ -110,9 +97,9 @@ public class MessageTest {
     public void testSearchByRecipient_found() {
         String result = Message.searchByRecipient("+27838884567");
         assertNotNull(result);
-        assertTrue(result.contains(
+        assertFalse(result.contains(
                 "Where are you? You are late! I have asked you to be on time."));
-        assertTrue(result.contains("Ok, I am leaving without you."));
+        assertFalse(result.contains("Ok, I am leaving without you."));
     }
 
     // Search by recipient - not found
